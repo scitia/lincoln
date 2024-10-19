@@ -1,7 +1,7 @@
 # Lincoln 
 
 <div style="display:flex;justify-content: center;align-items: center;">
-    <img src="/img/top_hat.svg" alt="high hat" height="300">
+    <img src="doc/img/top_hat.svg" alt="high hat" height="300">
 </div>
 
 ## Table of contents
