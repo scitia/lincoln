@@ -8,12 +8,12 @@
 
 - [Lincoln](#lincoln)
   - [Table of contents](#table-of-contents)
-    - [Math preface](#math-preface)
-    - [Install](#install)
-    - [Usage](#usage)
-    - [Summary](#summary)
+  - [Math preface](#math-preface)
+  - [Install](#install)
+  - [Usage](#usage)
+  - [Summary](#summary)
 
-### Math preface
+## Math preface
 
 The object of considerations is linear congruence in form:
 
@@ -61,17 +61,34 @@ $R =$ { $x \space|\space x \in G \space\land\space 0 < x < boundary$ }
 
 where $R$ is the finite set.
 
-### Install 
+## Install 
 
-After publishing this project on NPM repository here will be described installation procedure.
+```shell
+npm install @scitia/lincoln
+```
+Requires at least TypeScript: 5.6.3
 
-### Usage
+## Usage
 
 First thing you have to do is to create object of main ```Lincoln``` class.
 
 ```ts
 const lin = new Lincoln();
 ```
+
+In every case returned data has structure as type below:
+
+```ts
+export type SolverResult = {
+    ok: boolean;
+    mode: string;
+    explanation: string | undefined;
+    message: string | undefined;
+    result: number[] | number | undefined;
+};
+```
+
+Result of calculations are returned in ```result``` field.
 
 Looking for solution is very simple. We have to create object of Lincoln class, call a method ```construct()``` or each setter for required parameters: ```a```, ```b```, ```n``` according to math preface.
 
@@ -110,6 +127,7 @@ const solution = lin.firstOnly(); // 4
 
 
 
-### Summary
+## Summary
 
-Please report any problems you notice.
+This small library provides functionalities to calculate solution for linear congruence equasions.
+Please report any problems or bugs you notice.
