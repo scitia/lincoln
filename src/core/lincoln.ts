@@ -1,6 +1,10 @@
 import { floor, gcd, xgcd } from "mathjs";
 import { Mode } from "../enum/mode.enum";
 import * as pure from "../pure/functions";
+import { GeneralSolution } from "../type/general-solution.type";
+import { SolverResult } from "../type/solver-result.type";
+import { FailCouse } from "../enum/fail-couse.enum";
+import { FailCouseMessage } from "../enum/fail-couse-message.enum";
 
 export class Lincoln {
 
@@ -109,36 +113,35 @@ export class Lincoln {
         }
     }
 
-    private preliminaryValidation(): void {
+    private preliminaryValidation(): SolverResult {
 
         if (!this.slope || this._slope === 0) {
-            throw new Error('Linear coefficient of congruence must be non-zero and non null value');
+            return this.fail(FailCouse.BAD_SLOPE, FailCouseMessage.M_BAD_SLOPE);
         }
 
         if (!this.modulus || this._modulus < 2) {
-            throw new Error('Modulus number must to be greater or equal 2');
+            return this.fail(FailCouse.BAD_MODULUS, FailCouseMessage.M_BAD_MODULUS);
         }
 
         if (!this.congruent) {
-            throw new Error('Right side of the eqasion must be defined');
+            return this.fail(FailCouse.BAD_CONGRUENT, FailCouseMessage.M_BAD_CONGRUENT);
+
         }
+
+        return this.defaultSuccess();
     }
 
-    private validateSolutionExistence(): void {
+    private validateSolutionExistence(): SolverResult {
         
         const gcd_val = gcd(this._slope, this._modulus);
         if (!Number.isInteger(this._congruent / gcd_val)) {
-            throw new Error('Linear congruence equasion has no solution!');
+            this.fail(FailCouse.SOLUTION_NOT_EXIST, FailCouseMessage.M_SOLUTION_NOT_EXIST);
         }
+
+        return this.defaultSuccess();
     }
 
-    private generalSolution() {
-
-        this.preliminaryValidation();
-
-        this.minimalForm();
-
-        this.validateSolutionExistence();
+    private generalSolution(): GeneralSolution {
 
         //@ts-ignore
         const multiplicativeInverse = xgcd(this._slope, this._modulus)._data[1];
@@ -157,34 +160,90 @@ export class Lincoln {
         };
     }
 
-    private solve(mode: Mode, params?: any): number[] {
+    private solve(mode: Mode, params?: any): SolverResult {
+
+        const PV = this.preliminaryValidation();
+
+        if (!PV.ok) {
+            PV.mode = mode;
+            return PV;
+        }
+
+        this.minimalForm();
+
+        const VSE = this.validateSolutionExistence();
+
+        if (!VSE.ok) {
+            VSE.mode = mode;
+            return VSE;
+        }
 
         const general = this.generalSolution();
+        let result: number | number[];
 
         switch(mode) {
+            case Mode.GENERAL: {
+                result = Array.of(general.zeroPoint, general.modulus);
+                break;
+            }
+            case Mode.FIRST: {
+                result = general.zeroPoint;
+                break;
+            }
+            case Mode.FIRST_N: {
+                result = [...Array(params.n).keys()].map(k => general.zeroPoint + k*general.modulus);
+                break;
+            }
             case Mode.BOUNDARY: {
         
                 if (params.boundary! - general.zeroPoint < 0) {
-                    return [];
+                    result = [];
                 }
 
                 const lastOrbit = floor((params.boundary! - general.zeroPoint)/general.modulus);
-                return [...Array(lastOrbit + 1).keys()].map(k => general.zeroPoint + k*general.modulus);
-            }
-            case Mode.FIRST_N: {
-                return [...Array(params.n).keys()].map(k => general.zeroPoint + k*general.modulus);
-            }
-            case Mode.FIRST: {
-                return Array.of(general.zeroPoint);
-            }
-            // Equivalent to Mode.GENERAL
-            default: {
-                return Array.of(general.zeroPoint, general.modulus);
+                result = [...Array(lastOrbit + 1).keys()].map(k => general.zeroPoint + k*general.modulus);
+                break;
             }
         }
+
+        return this.repack(result, mode);
     }
 
-    public first(n: number): number[] {
+    private fail(explanation: string, message: string): SolverResult {
+        return {
+            ok: false,
+            mode: undefined,
+            explanation,
+            message,
+            result: undefined
+        };
+    }
+
+    private defaultSuccess(): SolverResult {
+        return {
+            ok: true,
+            mode: undefined,
+            explanation: undefined,
+            message: undefined,
+            result: undefined
+        };
+    }
+
+    private repack(result: number | number[], mode: string): SolverResult {
+        return {
+            ok: true,
+            mode,
+            explanation: undefined,
+            message: undefined,
+            result
+        };
+    }
+
+    public general(): SolverResult {
+        return this.solve(Mode.GENERAL);
+    }
+
+    public first(n: number): SolverResult {
         
         if (!n || n < 1) {
             throw new Error('N must be defined and must be greater than 1')
@@ -193,20 +252,16 @@ export class Lincoln {
         return this.solve(Mode.FIRST_N, {n});
     }
 
-    public firstOnly(): number {
-        return this.solve(Mode.FIRST)[0];
+    public firstOnly(): SolverResult {
+        return this.solve(Mode.FIRST);
     }
 
-    public atBoundary(boundary: number): number[] {
+    public atBoundary(boundary: number): SolverResult {
 
         if (!boundary || boundary < 1) {
             throw new Error('Boundary must be defined and must be greater than 1');
         }
 
         return this.solve(Mode.BOUNDARY, {boundary});
-    }
-
-    public general(): number[] {
-        return this.solve(Mode.GENERAL);
     }
 }

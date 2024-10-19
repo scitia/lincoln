@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {Lincoln} from "../src/index.ts"
+import { Mode } from "../src/enum/mode.enum.ts";
 
 describe('Lincoln linear congruence equasions solver tests', () => {
     it('2x≡4 (mod 6)', () => {
@@ -11,9 +12,11 @@ describe('Lincoln linear congruence equasions solver tests', () => {
 
         const solution = lin.general()
 
-        const first = solution[0];
-        const minimal_modulus = solution[1]; 
+        const first = solution.result[0];
+        const minimal_modulus = solution.result[1]; 
 
+        expect(solution.ok).toBe(true);
+        expect(solution.mode).toBe(Mode.GENERAL);
         expect(first).toBe(2);
         expect(minimal_modulus).toBe(9);
     });
@@ -24,9 +27,11 @@ describe('Lincoln linear congruence equasions solver tests', () => {
         lin.construct(701, 529, 7);
         const solution = lin.general();
 
-        const first = solution[0];
-        const minimal_modulus = solution[1]; 
+        const first = solution.result[0];
+        const minimal_modulus = solution.result[1]; 
 
+        expect(solution.ok).toBe(true);
+        expect(solution.mode).toBe(Mode.GENERAL);
         expect(first).toBe(4);
         expect(minimal_modulus).toBe(7);
     });

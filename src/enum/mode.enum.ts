@@ -1,6 +1,6 @@
 export enum Mode {
-    GENERAL,
-    FIRST_N,
-    FIRST,
-    BOUNDARY
+    GENERAL = "GENERAL",
+    FIRST_N = "FIRST_N",
+    FIRST = "FIRST",
+    BOUNDARY = "BOUNDARY"
 };
