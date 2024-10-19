@@ -17,7 +17,7 @@
     "solver"
   ],
   "author": "Kacper Liżewski",
-  "license": "ISC",
+  "license": "MIT",
   "description": "Linear congruence equasions solver",
   "devDependencies": {
     "typescript": "^5.6.3",
