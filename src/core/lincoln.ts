@@ -28,27 +28,33 @@ export class Lincoln {
 
     constructor() {}
 
-    set slope(slope: number) {
+    public construct(slope: number, congruent: number, modulus: number) {
         this._slope = slope;
-    }
-
-    get slope(): number {
-        return this._slope!;
-    }
-
-    set modulus(modulus: number) {
+        this._congruent = congruent;
         this._modulus = modulus;
     }
 
-    get modulus(): number {
+    public slope(slope: number) {
+        this._slope = slope;
+    }
+
+    public getSlope(): number {
+        return this._slope!;
+    }
+
+    public modulus(modulus: number) {
+        this._modulus = modulus;
+    }
+
+    public getModulus(): number {
         return this._modulus!;
     }
 
-    set congruent(congruent: number) {
+    public congruent(congruent: number) {
         this._congruent = congruent;
     }
 
-    get congruent(): number {
+    public getCongruent(): number {
         return this._congruent!;
     }
 
@@ -81,35 +87,35 @@ export class Lincoln {
             .reduce(pure.sumOp(), 0);
 
         const leftResult = leftAccumulator - rightAccumulator;
-        this.congruent -= leftResult;
+        this._congruent -= leftResult;
 
         const greatestCommonDivisor = gcd(
-            this.slope,
-            this.congruent,
-            this.modulus
+            this._slope,
+            this._congruent,
+            this._modulus
         );
 
         if (greatestCommonDivisor !== 1) {
             const reducedCoeff = Array.of(
-                this.slope, 
-                this.congruent, 
-                this.modulus
+                this._slope, 
+                this._congruent, 
+                this._modulus
             ).map(coeff => coeff / greatestCommonDivisor);
 
             reducedCoeff.reverse();
-            this.slope = reducedCoeff.pop()!;
-            this.congruent = reducedCoeff.pop()!;
-            this.modulus = reducedCoeff.pop()!;
+            this._slope = reducedCoeff.pop()!;
+            this._congruent = reducedCoeff.pop()!;
+            this._modulus = reducedCoeff.pop()!;
         }
     }
 
     private preliminaryValidation(): void {
 
-        if (!this.slope || this.slope === 0) {
+        if (!this.slope || this._slope === 0) {
             throw new Error('Linear coefficient of congruence must be non-zero and non null value');
         }
 
-        if (!this.modulus || this.modulus < 2) {
+        if (!this.modulus || this._modulus < 2) {
             throw new Error('Modulus number must to be greater or equal 2');
         }
 
@@ -120,8 +126,8 @@ export class Lincoln {
 
     private validateSolutionExistence(): void {
         
-        const gcd_val = gcd(this.slope, this.modulus);
-        if (!Number.isInteger(this.congruent / gcd_val)) {
+        const gcd_val = gcd(this._slope, this._modulus);
+        if (!Number.isInteger(this._congruent / gcd_val)) {
             throw new Error('Linear congruence equasion has no solution!');
         }
     }
@@ -135,40 +141,60 @@ export class Lincoln {
         this.validateSolutionExistence();
 
         //@ts-ignore
-        const multiplicativeInverse = xgcd(this.slope, this.modulus)._data[1];
+        const multiplicativeInverse = xgcd(this._slope, this._modulus)._data[1];
         //@ts-ignore
-        let solution = multiplicativeInverse * this.congruent;
+        let solution = multiplicativeInverse * this._congruent;
 
-        solution = solution % this.modulus;
+        solution = solution % this._modulus;
         
         if (solution < 0) {
-            solution += this.modulus;
+            solution += this._modulus;
         }
 
         return {
             zeroPoint: solution,
-            modulus: this.modulus
+            modulus: this._modulus
         };
     }
 
-    private solve(mode: Mode, boundary?: number): number[] {
+    private solve(mode: Mode, params?: any): number[] {
 
         const general = this.generalSolution();
 
         switch(mode) {
             case Mode.BOUNDARY: {
         
-                if (boundary! - general.zeroPoint < 0) {
+                if (params.boundary! - general.zeroPoint < 0) {
                     return [];
                 }
 
-                const lastOrbit = floor((boundary! - general.zeroPoint)/general.modulus);
+                const lastOrbit = floor((params.boundary! - general.zeroPoint)/general.modulus);
                 return [...Array(lastOrbit + 1).keys()].map(k => general.zeroPoint + k*general.modulus);
-            } 
+            }
+            case Mode.FIRST_N: {
+                return [...Array(params.n).keys()].map(k => general.zeroPoint + k*general.modulus);
+            }
+            case Mode.FIRST: {
+                return Array.of(general.zeroPoint);
+            }
+            // Equivalent to Mode.GENERAL
             default: {
                 return Array.of(general.zeroPoint, general.modulus);
             }
         }
+    }
+
+    public first(n: number): number[] {
+        
+        if (!n || n < 1) {
+            throw new Error('N must be defined and must be greater than 1')
+        }
+
+        return this.solve(Mode.FIRST_N, {n});
+    }
+
+    public firstOnly(): number {
+        return this.solve(Mode.FIRST)[0];
     }
 
     public atBoundary(boundary: number): number[] {
@@ -177,7 +203,7 @@ export class Lincoln {
             throw new Error('Boundary must be defined and must be greater than 1');
         }
 
-        return this.solve(Mode.BOUNDARY, boundary);
+        return this.solve(Mode.BOUNDARY, {boundary});
     }
 
     public general(): number[] {
