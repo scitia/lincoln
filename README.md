@@ -17,15 +17,15 @@
 
 The object of considerations is linear congruence in form:
 
-$ax\equiv b \:(mod\:n)$
+$ax\equiv b \space (mod \space n)$
 
 where: $a,b \in \mathbb{Z}$ and $n \in \mathbb{N}$, $n \ge 2$. 
 
 Sometimes it is useful to limit the result set by given boundary, so we can find general solution or limited set that: $0<x<boundary$ and $boundary \in \mathbb{N}$
 
-Congruence has a soltution $IFF\;\exists\: k \in \mathbb{Z}, k \cdot gcd(a,n) = b $
+Congruence has a soltution $IFF \space \exists \space k \in \mathbb{Z}, k \cdot gcd(a,n) = b $
 
-The most common algorithmic approach to solve this exercise is to find the **modular multiplicative inverse** $a\:mod\:b$
+The most common algorithmic approach to solve this exercise is to find the **modular multiplicative inverse** $a \space mod \space b$
 
 To achieve this we can use the **Extended Euclidian Algorithm** to compute Bézout coefficients of Bézout's identity (linear Diophantine equation): 
 
@@ -33,7 +33,7 @@ $ax+by=gcd(a,b)$
 
 which is particularly useful when $a$ and $b$ are coprime i.e., $gcd(a,b)=1$, becasue $x$ and $b$ have particular meaning:
 
-$x \equiv a^{-1} \: (mod\:b) $ &emsp;and&emsp; $y \equiv b^{-1} \:(mod\:a) $
+$x\equiv a^{-1} \space (mod \space b)$ &emsp;and&emsp; $y \equiv b^{-1} \space(mod \space a)$
 
 in sense of symbols used in Bézout's identity.
 
@@ -41,25 +41,23 @@ We aim to achieve the form of linear congruence equasion where $a$ and $b$ are c
 
 <!-- k a ≡ k b (mod k m) for any integer k -->
 
-$\frac{a}{d}x \equiv \frac{b}{d} \: (mod\:\frac{n}{d})$, because of equivalence relation property: $ka \equiv kb \:(mod\:km)$
+$\frac{a}{d}x \equiv \frac{b}{d} \space (mod \space \frac{n}{d})$, because of equivalence relation property: $ka \equiv kb \space (mod \space km)$
 
 Next step in our computations will be verify the existence of the solution. If solution exist we can compute the modular multiplicative inverse using Extended Euclidian Algorithm:
 
-$x_{0} \equiv a^{-1} \:(mod\:n)$
+$x_{0} \equiv a^{-1} \space(mod \space n)$
 
 and multiply equasion by $x_{0}$:
 
-$ a^{-1}ax \equiv a^{-1}b \:(mod\:n)  \implies x \equiv a^{-1}b \:(mod\:n) $ 
-
-$  $
+$a^{-1}ax \equiv a^{-1}b \space (mod \space n)  \implies x \equiv a^{-1}b \space (mod \space n)$ 
 
 In general solution of linear congruence equasion is the infinite set:
 
-$ G = \{ x \:|\: \forall k \in \mathbb{Z},\: x = x_{0}b + kn \} $
+$G =$ { $x \space|\space \forall k \in \mathbb{Z},\space x = x_{0}b + kn$ }
 
 But we will be looking for solution set $R \subset G$ limited to given boundary:
 
-$ R = \{ x \:|\: x \in G \:\land\: 0 < x < boundary \}$
+$R =$ { $x \space|\space x \in G \space\land\space 0 < x < boundary$ }
 
 where $R$ is the finite set.
 
