@@ -70,10 +70,18 @@ Requires at least TypeScript: 5.6.3
 
 ## Usage
 
-First thing you have to do is to create object of main ```Lincoln``` class.
+First thing you have to do is to create object of main ```Lincoln``` class depending on your package.json type property (commonjs, module).
 
 ```ts
+import { Lincoln } from '@scitia/lincoln';
 const lin = new Lincoln();
+```
+
+or:
+
+```ts
+const lincoln = require('@scitia/lincoln');
+const lin = new lincoln.Lincoln();
 ```
 
 In every case returned data has structure as type below:
