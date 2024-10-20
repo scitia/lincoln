@@ -9,6 +9,7 @@
 - [Lincoln](#lincoln)
   - [Table of contents](#table-of-contents)
   - [Math preface](#math-preface)
+  - [Description](#description)
   - [Install](#install)
   - [Usage](#usage)
   - [Summary](#summary)
@@ -60,6 +61,16 @@ But we will be looking for solution set $R \subset G$ limited to given boundary:
 $R =$ { $x \space|\space x \in G \space\land\space 0 \leq x \leq boundary$ }
 
 where $R$ is the finite set.
+
+Below simple schematic is presented. In general solutions we can assume that $k \rightarrow \inf$. 0-orbit represent obvious solution. Small black points represents an infinitely large amount of orbits. For practical reasons we often will be looking for finite set of solutions like first N solutions or limited by given boundary that is natural number.
+
+<div style="display:flex;justify-content: center;align-items: center;">
+    <img src="doc/img/ring.png" alt="high hat" height="700">
+</div>
+
+## Description
+
+This package is intended for all people who want to solve the equasion in $mod \space n$ arithmetic and need simple API with comprehensive explanation of methods used. It can be treated as tutrial as well. I hope it is simple and understable. It collects all mathematic basics and description of the algotihm that can be helpful to understand the topic. Feel free to use this code on your own needs.
 
 ## Install 
 
@@ -150,4 +161,4 @@ const solution = lin.firstOnly(); // 27
 ## Summary
 
 This small library provides functionalities to calculate solution for linear congruence equasions.
-Please report any problems or bugs you notice.
+Please report any problems or bugs you notice. If you notice any problems please report it as an issue or give feedback if you want to extend this small library with another more advanced topics :smiley:
