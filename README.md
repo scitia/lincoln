@@ -21,7 +21,7 @@ $ax\equiv b \space (mod \space n)$
 
 where: $a,b \in \mathbb{Z}$ and $n \in \mathbb{N}$, $n \ge 2$. 
 
-Sometimes it is useful to limit the result set by given boundary, so we can find general solution or limited set that: $0<x<boundary$ and $boundary \in \mathbb{N}$
+Sometimes it is useful to limit the result set by given boundary, so we can find general solution or limited set that: $0 \leq x \leq boundary$ and $boundary \in \mathbb{N}$
 
 Congruence has a soltution $IFF \space \exists \space k \in \mathbb{Z}, k \cdot gcd(a,n) = b $
 
@@ -57,7 +57,7 @@ $G =$ { $x \space|\space \forall k \in \mathbb{Z},\space x = x_{0}b + kn$ }
 
 But we will be looking for solution set $R \subset G$ limited to given boundary:
 
-$R =$ { $x \space|\space x \in G \space\land\space 0 < x < boundary$ }
+$R =$ { $x \space|\space x \in G \space\land\space 0 \leq x \leq boundary$ }
 
 where $R$ is the finite set.
 
@@ -125,7 +125,19 @@ If you want to know only first solution you just need to call the method ```firs
 const solution = lin.firstOnly(); // 4
 ```
 
+Other use case is when you need dynamically modify left or right linear congruence equasion side by adding or substracting values. Here comes four methods that allow you to achieve this directly ```lpus()```, ```lminus()```, ```rplus()```, ```rminus()```.
 
+```ts
+// 3x≡8 (mod 34) original form
+lin.construct(3, 8, 34);
+
+lin.lminus(4); // 3x-4≡8 (mod 34) 
+lin.lplus(1); // 3x-4+1≡8 (mod 34)
+lin.rplus(6, 5) // 3x-4+1≡8+6+5 (mod 34)
+lin.rminus(9); // 3x-4+1≡8+6+5-9 (mod 34)
+// 3x≡13 (mod 34)
+const solution = lin.firstOnly(); // 27
+```
 
 ## Summary
 

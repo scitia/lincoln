@@ -82,12 +82,12 @@ export class Lincoln {
 
         const leftAccumulator: number = Array.of(this.CLP, this.CLM.map(pure.opposite()))
             .flat()
-            .filter(pure.exist)
+            .filter(v => pure.exist(v))
             .reduce(pure.sumOp(), 0);
 
         const rightAccumulator: number = Array.of(this.CRP, this.CRM.map(pure.opposite()))
             .flat()
-            .filter(pure.exist)
+            .filter(v => pure.exist(v))
             .reduce(pure.sumOp(), 0);
 
         const leftResult = leftAccumulator - rightAccumulator;
@@ -115,15 +115,15 @@ export class Lincoln {
 
     private preliminaryValidation(): SolverResult {
 
-        if (!this.slope || this._slope === 0) {
+        if (!this._slope || this._slope === 0) {
             return this.fail(FailCouse.BAD_SLOPE, FailCouseMessage.M_BAD_SLOPE);
         }
 
-        if (!this.modulus || this._modulus < 2) {
+        if (!this._modulus || this._modulus < 2) {
             return this.fail(FailCouse.BAD_MODULUS, FailCouseMessage.M_BAD_MODULUS);
         }
 
-        if (!this.congruent) {
+        if (!this._congruent) {
             return this.fail(FailCouse.BAD_CONGRUENT, FailCouseMessage.M_BAD_CONGRUENT);
 
         }
@@ -133,9 +133,8 @@ export class Lincoln {
 
     private validateSolutionExistence(): SolverResult {
         
-        const gcd_val = gcd(this._slope, this._modulus);
-        if (!Number.isInteger(this._congruent / gcd_val)) {
-            this.fail(FailCouse.SOLUTION_NOT_EXIST, FailCouseMessage.M_SOLUTION_NOT_EXIST);
+        if (!Number.isInteger(this._congruent / gcd(this._slope, this._modulus))) {
+            return this.fail(FailCouse.SOLUTION_NOT_EXIST, FailCouseMessage.M_SOLUTION_NOT_EXIST);
         }
 
         return this.defaultSuccess();

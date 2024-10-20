@@ -10,5 +10,9 @@ function exist(value: any) {
     return !!value;
 }
 
+function existOp() {
+    return (value: any) => !!value;
+}
+
 export {opposite, sumOp, exist};
 
