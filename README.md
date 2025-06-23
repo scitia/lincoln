@@ -1,8 +1,10 @@
 # Lincoln 
 
-<div style="display:flex;justify-content: center;align-items: center;">
-    <img src="doc/img/top_hat.svg" alt="high hat" height="300">
-</div>
+<pre>
+    <div style="display:flex;justify-content: center;align-items: center;">
+        <img src="doc/img/top_hat.svg" alt="high hat" height="300">
+    </div>
+</pre>
 
 ## Table of contents
 
